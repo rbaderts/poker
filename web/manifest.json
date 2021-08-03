@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "manifest_version": 2,
+  "short_name": "Poker",
+  "name": "Poker",
+  "icons": {
+    "48": "img/favicon.ico",
+    "64": "img/favicon.ico"
+  },
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+
+
+}

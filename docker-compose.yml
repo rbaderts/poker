@@ -1,0 +1,79 @@
+version: "3.3"
+
+networks:
+  poker_network:
+     driver: bridge
+
+
+volumes:
+  postgres_data:
+    driver: local
+  tmp:
+    driver: local
+
+services:
+
+  web:
+    build: ./build
+    ports:
+      - "3000:3000"
+    networks:
+      - poker_network
+    depends_on: 
+      - postgres
+      - keycloak
+      - centrifugo
+
+
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+        - ./initdb:/docker-entrypoint-initdb.d
+
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POKER_DB_HOST: 127.0.0.1
+      networks:
+        - poker_network
+
+  keycloak:
+      image: poker/keycloak
+      environment:
+        DB_VENDOR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: keycloak
+        DB_ADDR: postgres
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+        KEYCLOAK_IMPORT: /keycloak.config.json
+        KEYCLOAK_FRONTEND_URL: http://localhost:8080/auth
+
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      restart: always
+      ports:
+        - "8080:8080"
+      networks:
+        - poker_network
+      depends_on:
+        - postgres
+      volumes:
+        - ./tmp:/tmp
+
+
+  centrifugo:
+    image: centrifugo/centrifugo:1.7.3
+    environment:
+      - CENTRIFUGO_SECRET=potato
+      - CENTRIFUGO_ADMIN_PASSWORD=potato
+      - CENTRIFUGO_ADMIN_SECRET=potato
+    command: centrifugo --web
+    ports:
+      - "8569:8000"
+    networks:
+      - poker_network
+
+

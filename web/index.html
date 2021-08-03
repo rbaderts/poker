@@ -1,0 +1,204 @@
+[[define "home"]]
+
+<!doctype html>
+<html lang="en">
+
+<head>
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="_rb">
+    <!-- Bootstrap CSS -->
+    <link rel="shortcut icon" type="image/png" href="/resources/img/favicon.png">
+    <!-- Google Fonts -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300i,400,700%7cMarcellus+SC" rel="stylesheet">
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.2/dist/css/bootstrap.css"/>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@0.15.8/dist/bootstrap-vue.css" />
+
+    <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet/less" type="text/css" href="/static/css/table.less" />
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!--    <script src="https://unpkg.com/browse/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script> -->
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <!--<script src="//unpkg.com/vue@latest/dist/vue.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Load the following for BootstrapVueIcons support -->
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+
+
+    <script src="/static/js/tableicon.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/less"></script>
+
+    <!--<script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+    -->
+
+
+  </head>
+
+<body style="padding-top: 36px;">
+
+      <header>[[template "nav" .UserName]]</header>
+
+  <div tabindex="-1" id="filler_div"
+       style="background-color: #123a21; height: 36px; width: 100%; z-index: 4;
+          position: fixed; top: 44px">
+    <!--
+    <div class="row" style="justify-content: center;">
+        <h3 class="nav-info" id="tournament-name-header">TempName</h3>
+    </div>
+    -->
+  </div>
+
+  <div class="lobby-container">
+      <div class="container-fluid">
+           <div id="lobby">
+               <ol>
+                   <table-icon v-for="table in tables"
+                                 v-bind:table=table
+                                 v-bind:key=table.id>
+                   </table-icon>
+               </ol>
+           </div>
+
+          <!--
+            <button id="table_1" type="button" class="btn btn-primary btn-sm"
+                    onclick="JoinButton(event, 1)"
+                    class="btn btn-primary btn-sm">Run Deck</button>
+                    -->
+
+            <form onsubmit="loadDeck()">
+                <label for="myfile">Select a deck json file:</label>
+                <input type="file" id="deckfile" name="myfile"><br><br>
+                <input type="submit" value="Submit">
+            </form>
+          <!--
+            <button id="table_2" type="button" class="btn btn-primary btn-sm"
+                    onclick="AddMoneyButton(event, 1)"
+                    class="btn btn-primary btn-sm">Add Money</button>
+      -->
+      </div>
+  </div>
+
+
+  <script>
+
+
+      var UID=[[.UserId]]
+
+    function loadDeck() {
+	    let file_elem = document.getElementById("deckfile")
+	    let filename = file_elem.value;
+	    axios.post('/api/tables?deckfile=' + filename, null);
+    }
+
+
+
+	window.vue = new Vue({
+      el: '#lobby',
+      data: {
+      	tables: []
+      },
+      created: async function() {
+           this.fetchData();
+      },
+      methods: {
+          fetchData: async function () {
+	          const tables = await axios.get(`/api/tables`);
+	          if (tables)  {
+	          	this.tables = tables.data;
+              }
+
+	          /*
+            var vm = this;
+
+              $.ajax
+              ({
+                  type: "GET",
+                  url: "/api/tables",
+                  dataType: 'json',
+                  async: false,
+                  data: null,
+                  success: function (data) {
+                      vm.tables = data.tables;
+                  }
+              });
+              */
+          }
+      }
+  });
+
+  window.onload = function () {
+  };
+
+
+  function AddMoneyButton(e, id) {
+
+      e.stopPropagation();
+
+      var url = "/api/users/current/stack/1000";
+        $.ajax
+        ({
+            type: "POST",
+            //the url where you want to sent the userName and password to
+            url: url,
+            dataType: 'json',
+            async: false,
+            data: null,
+            success: function (data) {
+            }
+            });
+  }
+
+  function JoinButton(e, id) {
+	  	console.log("Join Button");
+	  e.stopPropagation();
+
+		  var url = "/api/tables/" + id + "/join";
+            $.ajax
+            ({
+                type: "GET",
+                //the url where you want to sent the userName and password to
+                url: url,
+                dataType: 'json',
+                async: false,
+                data: null,
+                success: function (data) {
+                	console.log("data = " + JSON.stringify(data))
+	                var page = "/tables/" + data.id;
+	                //   jQuery.get(page, function (data) {
+	                window.location.assign(page);
+                }
+            });
+
+		  //  });
+	  }
+
+  </script>
+
+  </body>
+  </html>
+[[end]]

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+ cwebp [-preset <...>] [options] in_file [-o out_file]
+
+
+
+
+for i in *.png; do 
+    cwebp -preset picture  $i -o $i.webp
+done
+for i in *.png; do 
+    mv $i.webp $i
+done
+
+

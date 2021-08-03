@@ -1,0 +1,50 @@
+package adapters
+
+import (
+	"context"
+	"github.com/jackc/pgx/v4"
+	"github.com/rbaderts/poker/db"
+	"github.com/rbaderts/poker/domain"
+	"log"
+)
+
+type PostgresGameStateRepository struct {
+}
+
+func NewPostgresGameStateRepository() domain.GameStateRepository {
+	r := new(PostgresGameStateRepository)
+	return r
+}
+
+func (this *PostgresGameStateRepository) GetGameStateForSeat(ctx context.Context, seatNum int) {
+
+}
+
+func (this *PostgresGameStateRepository) UpdateGameState(ctx context.Context, game *domain.GameState) error {
+
+	conn, err := db.GetDBConn(ctx)
+	if err != nil {
+		return err
+	}
+	defer conn.Release()
+
+	for _, s := range game.Seats {
+
+		var rows pgx.Rows
+		rows, err = conn.Conn().Query(ctx,
+			"insert into GamePlayerState (game_id, user_id, seatnum, tablefunds)  "+
+				"Values ($1, $2, $3, $4"+
+				" ON CONFLICT ON CONSTRAINT GamePlayerState_pkey "+
+				"DO UPDATE SET tablefunds = $5;",
+			game.Id, s.UserId, s.Seatnum, s.Stack, s.Stack)
+
+		_ = rows
+		if err != nil {
+			log.Fatalf("Insert/Update GamePlayerState for User %v failed: %v", s.UserId, err)
+			return err
+		}
+
+	}
+	return nil
+
+}

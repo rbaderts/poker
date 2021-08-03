@@ -1,0 +1,16 @@
+domain/*
+adapters/*
+auth/*
+build/*
+app/*
+db/*
+cmd/*
+
+node_modules/*
+ports/*
+util/*
+
+server
+package.json
+
+
