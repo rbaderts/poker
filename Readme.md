@@ -3,11 +3,32 @@
            a refactor replacing centrifugo with NATS and keycloack with auth0...
 
 
+This is a work-in-progress multi-user holdem poker web application,
+built primarily to experiment with new techologies and 
+architecture patterns.
 
- The poker app assumes the availability these third party tools.
+The backend is in golang, the front-end uses vue.js.     
+The application employs the ideas from "Clean Archtiecture".   
+It employ async push notifications to attached web clients over
+websockets...
+
+
+It uses github.com/rbaderts/pokerlib which provides implementations
+of poker primitives (cards, deck, hand evaulations, etc)....
+
+
+
+
+
+Runtime dependencies:   
+
      1.  postgres
      2.  Centrifugo
      3.  keycloak
+
+
+
+
 
 Setup overview:
 
