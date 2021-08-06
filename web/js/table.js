@@ -1,10 +1,10 @@
-'use strict';
+// 'use strict';
 
-import Vue from "
-import axios from "../libs/axios.min.js";
+//iimport Vue from "
+//import axios from "../libs/axios.min.js";
 /// import { connect, StringCodec } from '../libs/nats.js'
 
-import main from './main';
+//import main from './main';
 
 
 
@@ -424,7 +424,7 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 	
 	var seatChannelCallbacks = {
 		"publish": function(message) {
-			console.log("received msg on seat channel: " + sub);
+			console.log("received msg on seat channel: " + seatSub);
 			//let msg = JSON.parse(message);
 			console.log("msg = " + JSON.stringify(message));
 			handleSeatCommand(message);
@@ -451,6 +451,7 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 		}
 	};
 
+    /*
 	const sub = await nc.subscribe(subject);
 	(async () => {
 		for await (const m of subject) {
@@ -458,14 +459,15 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 			m.respond(sc.encode(`I can help ${sc.decode(m.data)}`));
 		}
 	})().then();
+    */
 
 //	NatsClient.subscribe(sub, )
-//	window.centrifuge.subscribe(sub, tableChannelCallbacks);
+    
+	window.centrifuge.subscribe(subject, tableChannelCallbacks);
 
 	console.log("subscribing to channel:" + seatSub);
-//	window.centrifuge.subscribe(seatSub, seatChannelCallbacks);
+	window.centrifuge.subscribe(seatSub, seatChannelCallbacks);
 
-	/*
 	window.centrifuge.on('connect', function(context) {
 		console.log("centrifugo connectedd")
 		// now client connected to Centrifugo and authorized
@@ -475,15 +477,16 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 		// do whatever you need in case of disconnect from server
 		console.log("centrifugo disconnected")
 	});
-	*/
 
-//	window.addEventListener("unload", LeaveTable);
+	window.addEventListener("unload", LeaveTable);
+
 	/*
 	chrome.tabs.onAttached.addListener(function(tabId, props) {
 		consolje.log("tab attached");
 	});
 	 */
 
+    /*
 	async function dispatch(s) {
 		let subj = s.getSubject();
 		console.log(`listening for ${subj}`);
@@ -497,6 +500,7 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 			);
 		}
 	}
+    */
 
 }
 
@@ -760,5 +764,4 @@ function LeaveTable() {
 	vm.destroy()
 }
 
-export default TableRoot;
 

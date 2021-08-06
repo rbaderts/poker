@@ -1,7 +1,4 @@
  
- * Note:   This is currently not in a runnable state, it is midway through
-           a refactor replacing centrifugo with NATS and keycloack with auth0...
-
 
 This is a work-in-progress multi-user holdem poker web application,
 built primarily to experiment with new techologies and 
