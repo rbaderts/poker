@@ -48,6 +48,7 @@ elif [ "$1" == "docker" ]; then
 
 else 
     . ./poker.env
+    . ./secrets.env
 
     export GOOS=darwin
     export OGARCH=amd64

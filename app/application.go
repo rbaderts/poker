@@ -66,7 +66,7 @@ func NewApplication(db *pgxpool.Pool) *Application {
 	GblUserService = NewUserService(domain.GblUserRepository)
 
 	//application.UserService = app.NewUserService(application.UserRepository)
-	domain.GblMessageDispatcher = adapters.NewNatsDispatcher()
+	domain.GblMessageDispatcher = adapters.NewCentrifugoDispatcher()
 
 	//app.tables = make(map[string]*Table, 0)
 	MainApp = application

@@ -2,7 +2,7 @@
 
 import Vue from "
 import axios from "../libs/axios.min.js";
-import { connect, StringCodec } from '../libs/nats.js'
+/// import { connect, StringCodec } from '../libs/nats.js'
 
 import main from './main';
 
@@ -377,19 +377,18 @@ const Attach = async function (jwt, tableId, ourseatnumber, seatSub) {
 
 	console.log("Attache: jwt: " + jwt + ", tableId = " + tableId);
 
+	/*
 	NatsClient = await natsws.connect(
 		{
 			servers: ["ws://localhost:9222", "wss://localhost:2229", "localhost:9111"],
 		},
 	);
+	 */
 
-	/*
 	window.centrifuge = new Centrifuge('ws://localhost:8000/connection/websocket');
 
 	window.centrifuge.setToken(jwt);
 	window.centrifuge.connect();
-	*
-	 */
 
 
 

@@ -3,15 +3,15 @@ package server
 import (
 	"context"
 	"errors"
-	"github.com/nats-io/nats.go"
-	"github.com/rbaderts/poker/adapters"
+	_ "github.com/nats-io/nats.go"
+	_ "github.com/rbaderts/poker/adapters"
 	"github.com/rbaderts/poker/app"
 	"github.com/rbaderts/poker/domain"
 	"github.com/rbaderts/poker/ports"
 	"github.com/rbaderts/poker/util"
 
-	//	"github.com/centrifugal/centrifuge-go"
-	_ "github.com/centrifugal/gocent"
+	_ "github.com/centrifugal/centrifuge-go"
+	"github.com/centrifugal/gocent"
 	"mime"
 
 	"github.com/go-chi/chi"
@@ -44,7 +44,7 @@ var (
 	//	playersTemplate      *template.Template
 	upgrader = websocket.Upgrader{WriteBufferSize: 1024, ReadBufferSize: 1024}
 
-	//CentClient *gocent.Client
+	CentClient *gocent.Client
 	//NatsClient *nats.Conn
 )
 
@@ -101,22 +101,22 @@ func corsHandler(w http.ResponseWriter, r *http.Request) {
 }
 func Server(done chan bool) {
 
-	/*
-		centrifugoKey := os.Getenv("CENTRIFUGO_KEY")
-		centrifugoService := os.Getenv("CENTRIFUGO_SERVICE")
-		CentClient = gocent.New(gocent.Config{
-			Addr: centrifugoService,
-			Key:  centrifugoKey,
-		})
-	*/
+	centrifugoKey := os.Getenv("CENTRIFUGO_KEY")
+	centrifugoService := os.Getenv("CENTRIFUGO_SERVICE")
+	CentClient = gocent.New(gocent.Config{
+		Addr: centrifugoService,
+		Key:  centrifugoKey,
+	})
 
-	var err error
-	fmt.Printf("Attempting nats connection...\n")
-	natsUrl := os.Getenv("NATS_URL")
-	adapters.NatsClient, err = nats.Connect(natsUrl)
-	if err != nil {
-		fmt.Printf("Unable to connect to nats: %v\n", err)
-	}
+	/*
+		var err error
+		fmt.Printf("Attempting nats connection...\n")
+		natsUrl := os.Getenv("NATS_URL")
+		adapters.NatsClient, err = nats.Connect(natsUrl)
+		if err != nil {
+			fmt.Printf("Unable to connect to nats: %v\n", err)
+		}
+	*/
 
 	env := &util.Env{
 
